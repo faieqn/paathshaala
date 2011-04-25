@@ -1,0 +1,135 @@
+<html>
+<head>
+    
+    <title>Paathshaala Slideshow</title>
+    <script type="text/javascript" src="./jquery.js"></script>
+
+    <style>
+        .slide {
+            border: medium solid black;
+            height: 400px;
+            width: 600px;
+       
+        };
+
+     
+    </style>
+    <script>
+
+
+
+var socket;
+var AllSlides;
+var SlideNum;
+function init(){
+  var host = "ws://localhost:8000/test";
+  try{
+    socket = new WebSocket(host);
+    log('WebSocket - status '+socket.readyState);
+    socket.onopen    = function(msg){ log("Welcome - status "+this.readyState); };
+    socket.onmessage = function(msg){ 
+	//alert(msg.data.str);
+	msg_new = eval('(' + msg.data + ')');   
+	if(msg_new.channel_id = "my_secret_string"){
+	
+		num = parseInt(msg_new.str) ; 
+	   	if(!isNaN(num)){
+			log("Received: "+num); 
+			changeSlide(num);
+		}
+	}//if, message belongs to right channel	
+    };
+    socket.onclose   = function(msg){ log("Disconnected - status "+this.readyState); };
+  }
+  catch(ex){ log(ex); }
+  //PP("msg").focus();
+}
+
+
+
+
+function send(Num){
+	var msg = '{"channel_id" : "my_secret_string", "str":"' + Num + '"}';
+
+  try{ socket.send(msg); log('Sent: '+msg); } catch(ex){ log(ex); }
+}
+       
+function PP(id){ return document.getElementById(id); }
+function log(msg1){ PP("log").innerHTML+="<br>"+msg1; }
+function onkey(event){ if(event.keyCode==13){ send(); } }
+function changeSlide(Num){
+		//alert(Num);
+     		$(AllSlides[SlideNum]).hide();
+		$(AllSlides[Num]).show();
+		SlideNum = Num;
+				
+}//function
+
+
+
+
+            $(function(){      //for slide show
+            init();
+	    AllSlides = $(".slide") ;
+            AllSlides.hide();
+            SlideNum = 0;
+            $(AllSlides[SlideNum]).show();
+           
+
+		
+            
+            $("#next").click(function(){
+                $(AllSlides[SlideNum]).hide();
+                SlideNum = SlideNum + 1 ;
+	        $(AllSlides[SlideNum]).show();
+	        //log (typeof SlideNum)
+               send(SlideNum);
+           
+            });
+           
+            $("#back").click(function(){
+                $(AllSlides[SlideNum]).hide();
+                SlideNum = SlideNum - 1 ; 
+            $(AllSlides[SlideNum]).show();		
+               send(SlideNum);
+           
+              });
+
+
+       });//end of slideshow
+</script>
+</head>
+<body>
+<div class="slide"> <img src="1.jpeg" /> </div>
+<div class="slide"  contenteditable="true">This is a page 2 , THIS PAGE IS EDITABLE </div>
+<div class="slide"  contenteditable="true">This is a page 3 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 4 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 5 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 6 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 7 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 8 , THIS PAGE IS EDITABLE</div>
+<div class="slide" contenteditable="true">This is a page 9 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 10 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 11 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 12 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 13 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 14 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 15 ,THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 16 , THIS PAGE IS EDITABLE</div>
+<div class="slide" contenteditable="true">This is a page 17 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 18 , THIS PAGE IS EDITABLE </div>
+<div class="slide" contenteditable="true">This is a page 19 , THIS PAGE IS EDITABLE </div>
+<div class="slide"  contenteditable="true">This is a page 20 , THIS PAGE IS EDITABLE </div>
+
+<button id="back">back</button>
+<button id="next">next</button>
+<div id="log"></div>
+<div id="msg"></div>
+
+
+</body>
+</html>
+
+        
+       
+
