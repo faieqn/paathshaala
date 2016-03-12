@@ -1,0 +1,1 @@
+An educast that will be a virtual classroom enviornment which will include all the components of a real classroom i.e slideshows,a drawing board, desktop activities and video and audio streaming.
